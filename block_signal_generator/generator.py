@@ -1,7 +1,4 @@
-from orm_importer.importer import ORMImporter
-from planproexporter import Generator
-from railwayroutegenerator.routegenerator import RouteGenerator
-from yaramo.signal import SignalKind, Signal, SignalDirection, SignalFunction
+from yaramo.signal import SignalKind, Signal, SignalDirection, SignalFunction, SignalState
 from yaramo.topology import Topology
 
 
@@ -16,14 +13,10 @@ class BlockSignalGenerator:
                 # node is an end node
                 other_node = node.connected_nodes[0]
                 edge = self.topology.get_edge_by_nodes(node, other_node)
-                has_main_signal = False
-                has_minor_signal = False
-                for signal in edge.signals:
-                    if signal.kind in [SignalKind.Hauptsignal, SignalKind.Mehrabschnittssignal, SignalKind.Hauptsperrsignal]:
-                        has_main_signal = True
-                    if signal.kind == SignalKind.Sperrsignal:
-                        has_minor_signal = True
-                if not has_minor_signal:
+                # We don't want to add a signal on edges that are an end, e.g. a buffer stop.
+                # These are identified by searching for a Sperrsignal that can only show Hp0/Sh0.
+                has_end_signal = any(signal.kind == SignalKind.Sperrsignal and signal.states == set(SignalState.hp0) for signal in edge.signals)
+                if not has_end_signal:
                     # add virtual block signal as route destination for exit
                     if edge.node_a == node:
                         distance_edge = 5
