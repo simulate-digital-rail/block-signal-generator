@@ -393,7 +393,7 @@ pyproj = "^3.4.1"
 type = "git"
 url = "https://github.com/simulate-digital-rail/yaramo"
 reference = "HEAD"
-resolved_reference = "158e39fb5994f8b3feffe3ddbb83e41497215890"
+resolved_reference = "370bebdaf86af6d49e2b884e852b90ed0efbcf7a"
 
 [metadata]
 lock-version = "1.1"
