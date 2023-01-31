@@ -15,7 +15,7 @@ class BlockSignalGenerator:
                 edge = self.topology.get_edge_by_nodes(node, other_node)
                 # We don't want to add a signal on edges that are an end, e.g. a buffer stop.
                 # These are identified by searching for a Sperrsignal that can only show Hp0/Sh0.
-                has_end_signal = any(signal.kind == SignalKind.Sperrsignal and signal.states == set(SignalState.hp0) for signal in edge.signals)
+                has_end_signal = any(signal.kind == SignalKind.Sperrsignal and signal.supported_states == set(SignalState.hp0) for signal in edge.signals)
                 if not has_end_signal:
                     # add virtual block signal as route destination for exit
                     if edge.node_a == node:
